@@ -73,6 +73,38 @@ class Controller{
         })
     }
 
+    upVoteQuestion(req,res){
+        let voterId = req.user.id
+        Question.findByIdAndUpdate({
+            _id: req.params.id
+        },{
+            $addToSet: {votersUpId : voterId},
+            $pull: {votersDownId : voterId}
+        })
+        .then(response => {
+            res.status(200).json({msg: 'upvote success'},response)
+        })
+        .catch(err => {
+            res.status(400).json({msg: 'upvote failed'},err)
+        })
+    }
+
+    downVoteQuestion(req,res){
+        let voterId = req.user.id
+        Question.findByIdAndUpdate({
+            _id: req.params.id
+        },{
+            $addToSet: {votersDownId: voterId},
+            $pull: {votersUpId: voterId}
+        })
+        .then(response => {
+            res.status(200).json({msg: 'downvote success'},response)
+        })
+        .catch(err =>{
+            res.status(400).json({msg: 'downvote failed'},err)
+        })
+    }
+
     
 
 
