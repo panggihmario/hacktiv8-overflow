@@ -2,13 +2,16 @@ var mongoose = require('mongoose')
 
 var Schema = mongoose.Schema
 var blogAnswer = new Schema({
-    question: {
+    answer: {
         type: String,
         required: true
     },
+    question: {
+        type: Schema.Types.ObjectId,
+        ref: 'Question',
+    },
     owner: {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: 'User'
     },
     votersUpId: [{
@@ -23,5 +26,5 @@ var blogAnswer = new Schema({
     timestamps: true
 })
 
-var answer = mongoose.model('Answer',blogAnswer)
-module.exports = answer
+var answers = mongoose.model('Answer',blogAnswer)
+module.exports = answers

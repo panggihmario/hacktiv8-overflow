@@ -3,7 +3,7 @@
   <v-app id="inspire">
   <Navbar></Navbar>
   <Login></Login>
-    
+    <Edit></Edit>
   <v-container fluid>
     
     <v-layout row>
@@ -27,9 +27,10 @@
 import Navbar from '@/components/Navbar.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import Login from '@/components/Login.vue'
+import Edit from '@/components/editQuestion.vue'
 export default {
   components: {
-    Navbar, Sidebar, Login
+    Navbar, Sidebar, Login, Edit
   }
 }
 </script>

@@ -4,6 +4,7 @@ const User = require('../models/user')
 function authentication(req,res,next){
     console.log('masuk auth')
     let decoded = jwt.verify(req.headers.authorization,'easy')
+    console.log(decoded)
     if(decoded){
         User.findOne({
             _id: decoded.id

@@ -6,17 +6,24 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     dialogLogin: false,
+    dialogEdit: false,
     username: '',
     email: '',
     emailLogin: '',
     passwordLogin: '',
     password: '',
     title:'',
-    question: ''
+    question: '',
+    questions: [],
+    oneQuestion: {},
+    idEdit: ''
   },
   mutations: {
     setDialogLogin (state, payload) {
       state.dialogLogin = payload
+    },
+    setDialogEdit (state, payload) {
+      state.dialogEdit = payload
     },
     setUsername (state, payload) {
       state.username = payload
@@ -38,11 +45,27 @@ export default new Vuex.Store({
     },
     setQuestion (state, payload) {
       state.question = payload
+    },
+    setQuestions (state, payload) {
+      state.questions = payload
+    },
+    setOneQuestion (state, payload) {
+      state.oneQuestion = payload
+    },
+    setIdQuestion (state, payload){
+      state.idEdit = payload
     }
   },
   actions: {
     openModalLogin (context) {
       context.commit('setDialogLogin', true)
+    },
+    openModalEdit (context,data) {
+      context.commit('setDialogEdit', true)
+      context.commit('setTitle', data.title)
+      context.commit('setQuestion', data.question)
+      context.commit('setIdQuestion', data._id)
+
     },
     register (context) {
       axios.post('http://localhost:3000/users/register', {
@@ -82,6 +105,56 @@ export default new Vuex.Store({
       })
       .then(question => {
         console.log(question)
+      })
+      .catch(err =>{
+        console.log(err.response)
+      })
+    },
+    getAllQuestion (context) {
+      axios.get('http://localhost:3000/question/allQuestion')
+      .then(allQuestion => {
+        context.commit('setQuestions', allQuestion.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    },
+    getOneQuestion (context, id) {
+      axios.get(`http://localhost:3000/question/${id}`)
+      .then(question => {
+        console.log(question)
+        context.commit('setOneQuestion',question.data)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    },
+    editQuestion (context, id) {
+      let token = localStorage.getItem('token')
+      axios.put(`http://localhost:3000/question/edit/${id}`,{
+        title: this.state.title,
+        question: this.state.question
+      },{
+        headers: {
+          authorization: token
+        }
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    },
+    deleteQuestion (context, id) {
+      let token = localStorage.getItem('token')
+      axios.delete(`http://localhost:3000/question/delete/${id}`,{
+        headers: {
+          authorization: token
+        }
+      })
+      .then(response => {
+        console.log(response)
       })
       .catch(err =>{
         console.log(err.response)

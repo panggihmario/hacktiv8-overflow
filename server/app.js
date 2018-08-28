@@ -15,7 +15,7 @@ mongoose.connect(`mongodb://mario:mario123@ds157901.mlab.com:57901/hacktiv8-over
     console.log('connected')
   }
 })
-
+// require('./models/answer');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var questionRouter = require('./routes/question')

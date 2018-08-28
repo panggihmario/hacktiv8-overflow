@@ -1,18 +1,15 @@
 const Question = require('../models/question')
-
+const Answer = require('../models/answer');
 class Controller{
 
     static addQuestion(req,res){
-        console.log('ini dari controller',req.body)
-        console.log('ini dari controller',req.user)
         Question.create({
             title: req.body.title,
             question: req.body.question,
             owner: req.user._id
         })
         .then(dataQuestion => {
-            console.log(dataQuestion)
-            res.status(200).json(dataQuestion)
+            res.status(200).json({msg:'create question success',dataQuestion})
         })
         .catch(err => {
             res.status(400).json({msg: 'create question failed',err})
@@ -20,7 +17,7 @@ class Controller{
     }
 
     static getAllQuestion(req,res){
-        Question.find({})
+        Question.find()
         .populate('owner')
         .populate({
             path:'answer', populate:[{path: 'owner'}]
@@ -33,7 +30,7 @@ class Controller{
         })
     }
 
-    static getOneArticle(req,res){
+    static getOneQuestion(req,res){
         Question.findOne({
             _id: req.params.id
         })

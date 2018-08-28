@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import List from './components/listQuestion.vue'
 import Add from './components/addQuestion.vue'
+import Question from './components/detailQuestion.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
         path: '/add',
         name: 'add',
         component: Add
+      },{
+        path: '/:id',
+        name: 'question',
+        component : Question
       }]
     },
     {
