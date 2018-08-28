@@ -3,17 +3,25 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors');
 
 require('dotenv').config()
 var mongoose = require('mongoose');
 
-mongoose.connect(`mongodb://mario:mario123@ds157901.mlab.com:57901/hacktiv8-overflow`,{ useNewUrlParser: true })
+mongoose.connect(`mongodb://mario:mario123@ds157901.mlab.com:57901/hacktiv8-overflow`,{ useNewUrlParser: true },function(err){
+  if(err){
+    console.log(err);
+  }else{
+    console.log('connected')
+  }
+})
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var questionRouter = require('./routes/question')
 
 var app = express();
-
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -26,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/question', questionRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

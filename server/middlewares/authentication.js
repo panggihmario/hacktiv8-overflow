@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 function authentication(req,res,next){
+    console.log('masuk auth')
     let decoded = jwt.verify(req.headers.authorization,'easy')
     if(decoded){
         User.findOne({
@@ -10,6 +11,7 @@ function authentication(req,res,next){
         .then(dataUser => {
             if(dataUser){
                 req.user = dataUser
+                console.log('ini dari token======',req.user)
                 next()
             }else{
                 res.status(400).send({ msg:'user doesnt exist'})

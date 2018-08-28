@@ -3,12 +3,15 @@ const Question = require('../models/question')
 class Controller{
 
     static addQuestion(req,res){
+        console.log('ini dari controller',req.body)
+        console.log('ini dari controller',req.user)
         Question.create({
             title: req.body.title,
             question: req.body.question,
-            user: req.user._id
+            owner: req.user._id
         })
         .then(dataQuestion => {
+            console.log(dataQuestion)
             res.status(200).json(dataQuestion)
         })
         .catch(err => {

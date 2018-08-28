@@ -1,29 +1,28 @@
 const User = require('../models/user')
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const saltRound = 10
+const bcrypt = require('bcryptjs')
 
 class Controller{
 
     static signUp(req,res){
-        var salt = bcrypt.genSaltSync(saltRound)
-        var hash = bcrypt.hashSync(req.body.password, salt)
         User.findOne({
             email: req.body.email
         })
         .then(data=>{
             if(!data){
                 User.create({
-                    name : req.body.name,
+                    username : req.body.username,
                     email: req.body.email,
-                    password: hash
+                    password: req.body.password
                 })
                 .then(dataUser=>{
                     res.status(200).json(dataUser)
                 })
                 .catch(err=>{
-                    res.status(400).json(err)
+                    res.status(400).json({msg: err.message})
                 })
+            }else{
+                res.status(400).json({msg: 'email has already taken'})
             }
         })
         .catch(err=>{
