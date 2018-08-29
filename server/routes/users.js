@@ -9,5 +9,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/register',User.signUp)
 router.post('/login',User.SignIn)
+router.post('/loginFb',User.loginFb)
+router.post('/sendEmail',User.sendEmail)
 
 module.exports = router;

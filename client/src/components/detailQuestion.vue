@@ -30,22 +30,22 @@
         <br>
 
         <v-card v-for="(answer,index) in oneQuestion.answer" :key=index>
-          <v-toolbar color="white" dark>
-              <v-toolbar-title class="black--text">{{answer.owner.username}}</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-text class="black--text">{{formatedDate(answer.createdAt)}}</v-toolbar-text>
-          </v-toolbar>
+            <v-toolbar color="white" dark>
+                <v-toolbar-title class="black--text">{{answer.owner.username}}</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-text class="black--text">{{formatedDate(answer.createdAt)}}</v-toolbar-text>
+            </v-toolbar>
                 <br>
                 <br>
                 <p v-html="answer.answer"></p>
-          <v-card-actions>
-            <v-btn flat color="orange" @click="openModalEditAnswer(answer)">Edit</v-btn>
-            <v-btn flat color="orange">Delete</v-btn>
-            <v-spacer></v-spacer>
-              <v-btn flat icon color="black" @click="upVoteAnswer(answer)">
-                  <i class="fas fa-thumbs-up fa-2x"></i>
-              </v-btn>
-                {{answer.vote}}
+            <v-card-actions>
+                <v-btn flat color="orange" @click="openModalEditAnswer(answer)">Edit</v-btn>
+                <!-- <v-btn flat color="orange">Delete</v-btn> -->
+                <v-spacer></v-spacer>
+                    <v-btn flat icon color="black" @click="upVoteAnswer(answer)">
+                        <i class="fas fa-thumbs-up fa-2x"></i>
+                    </v-btn>
+                    {{answer.vote}}
                 <v-btn flat icon color="black" @click="downVoteAnswer(answer)">
                     <i class="fas fa-thumbs-down fa-2x"></i>
                 </v-btn>

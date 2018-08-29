@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import router from './router.js'
+import {provider ,auth} from '@/fire.js'
+import swal from 'sweetalert';
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -102,6 +105,10 @@ export default new Vuex.Store({
       })
       .then(dataUser => {
         console.log(dataUser)
+        context.dispatch('sendEmail')
+        this.state.username =''
+        this.state.email = ''
+        this.state.password = ''
       })
       .catch(err => {
         console.log(err.response)
@@ -128,6 +135,7 @@ export default new Vuex.Store({
     logout (context) {
       localStorage.clear()
       context.commit('setStatusLogin',false)
+      router.push('/list')
     },
     addQuestion (context) {
       let token = localStorage.getItem('token')
@@ -215,7 +223,7 @@ export default new Vuex.Store({
         console.log(vote.data)
       })
       .catch(err => {
-        console.log(err.response)
+        swal("Failed!", err.response.data.msg, "error");
       })
     },
     downVoteQuestion (context, id) {
@@ -230,7 +238,7 @@ export default new Vuex.Store({
         router.push(`/${id}`)
       })
       .catch(err => {
-        console.log(err.response)
+        swal("Failed!", err.response.data.msg, "error");
       })
     },
     addAnswer (context, id) {
@@ -265,7 +273,7 @@ export default new Vuex.Store({
       .then(dataEdit => {
         this.state.answer = ''
         context.dispatch(`getOneQuestion`,id)
-        context.commit('setDialogEditAnswer')
+        context.commit('setDialogEditAnswer',false)
         router.push(`/${id}`)
         console.log('success',dataEdit)
       })
@@ -287,7 +295,7 @@ export default new Vuex.Store({
         console.log('success',vote)
       })
       .catch(err => {
-        console.log(err.response)
+        swal("Failed!", err.response.data.msg, "error");
       })
     },
     downVoteAnswer (context, data) {
@@ -297,14 +305,48 @@ export default new Vuex.Store({
           authorization: token
         }
       })
-      .then(vote => {
-        context.dispatch(`getOneQuestion`,data.question)
-        context.commit('setDialogEditAnswer')
-        router.push(`/${data.question}`)
-        console.log('succes',vote)
+        .then(vote => {
+          context.dispatch(`getOneQuestion`, data.question)
+          context.commit('setDialogEditAnswer')
+          router.push(`/${data.question}`)
+          console.log('succes', vote)
+        })
+        .catch(err => {
+          // console.log(err.response)
+          swal("Failed!", err.response.data.msg, "error");
+        })
+    },
+    loginFb (context) {
+      auth.signInWithPopup(provider)
+        .then(function (result) {
+          var token = result.credential.accessToken
+          console.log(token)
+          axios.post(`http://localhost:3000/users/loginFb`, {
+            data: {
+              fbToken: token
+            }
+          })
+            .then(response => {
+              context.commit('setStatusLogin', true)
+              context.commit('setUserLogin', response.data.dataFb.username)
+              localStorage.setItem('token', response.data.authorization)
+              context.commit('setDialogLogin', false)
+              console.log(response)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        })
+    },
+    sendEmail (context) {
+      axios.post('http://localhost:3000/users/sendEmail',{
+        email : this.state.email
+      })
+      .then(data => {
+        console.log("success =====", data)
       })
       .catch(err => {
-        console.log(err.response)
+        console.log(err)
       })
     }
   }

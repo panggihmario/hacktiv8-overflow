@@ -59,7 +59,7 @@ export default {
           this.$store.commit('setAnswer', value)
         }
       },
-    }
+    },
 }
 </script>
 

@@ -56,4 +56,14 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+// var CronJob = require('cron').CronJob;
+// const nodemailer = require('nodemailer');
+// new CronJob('* */1 * * * *', function() {
+//     console.log('You will see this message every second');
+//   }, null, true, 'America/Los_Angeles');
+var cron = require('./middlewares/cron')
+cron()
+
+
 module.exports = app;

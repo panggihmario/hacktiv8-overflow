@@ -1,4 +1,5 @@
 <template>
+
   <v-layout row justify-center>
   <v-dialog v-model="dialogLogin" fullscreen hide-overlay transition="dialog-bottom-transition">
     <v-card class="white">
@@ -44,9 +45,9 @@
               </v-flex>
           </v-list-tile>
           <v-list-tile avatar>
-          
             <v-flex xs8 offset-xs2>
               <v-btn outline color="black" @click="login">Sign In</v-btn>
+              <v-btn outline color="black" @click="loginFb">Login Fb</v-btn>
             </v-flex>
           </v-list-tile>
       </v-flex>
@@ -90,8 +91,9 @@
               </v-flex>
             </v-list-tile>
             <v-flex xs8 offset-xs2>
-             
               <v-btn outline color="black" @click="register">Sign Up</v-btn>
+               <v-btn outline color="black" @click="loginFb">Login Fb </v-btn>
+              <!-- <img src="../assets/facebook.png" alt="" width="100px" @click="loginFb"> -->
             </v-flex>
       </v-flex>
     </v-layout>
@@ -103,7 +105,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -112,9 +115,9 @@ export default {
       show1: false,
       rules: {
         required: value => !!value || 'Required.',
-        min: v => v.length >= 6 || 'Min 6 characters',
+        min: v => v.length >= 6 || 'Min 6 characters'
       },
-       emailRules: [
+      emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
       ]
@@ -122,7 +125,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'register', 'login'
+      'register', 'login', 'loginFb'
     ])
   },
   computed: {
