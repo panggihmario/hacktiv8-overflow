@@ -6,6 +6,10 @@ var blogQuestion = new Schema({
         type: String,
         required: true
     },
+    vote: {
+        type: Number,
+        default: 0, 
+    },
     question: {
         type: String,
         required: true

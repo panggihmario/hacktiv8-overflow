@@ -105,18 +105,35 @@ class Controller{
         })
         .then(data => {
             if(String(data.owner) !== String(req.user._id)){
-                Question.findByIdAndUpdate({
-                    _id: req.params.id
-                },{
-                    $addToSet: {votersUpId : voterId},
-                    $pull: {votersDownId : voterId}
+                Question.findOne({
+                    _id:req.params.id,
+                    votersUpId: {$in:voterId}
                 })
-                .then(response => {
-                    res.status(201).json({msg:'upvote success',response})
+                .then(checkVote => {
+                    console.log(checkVote)
+                    if(checkVote){
+                        res.status(400).json({msg:'you already vote in this question'})
+                    }else{
+                        console.log('check user blom ada')
+                        Question.findByIdAndUpdate({
+                            _id: req.params.id
+                        },{
+                            $addToSet: {votersUpId : voterId},
+                            $pull: {votersDownId : voterId},
+                            $inc: {vote :1}
+                        })
+                        .then(response => {
+                            res.status(201).json({msg:'upvote success',response})
+                        })
+                        .catch(err => {
+                            res.status(400).json({msg: 'upvote failed',err})
+                        })
+                    }
                 })
                 .catch(err => {
-                    res.status(400).json({msg: 'upvote failed',err})
+                    res.status(400).json(err)
                 })
+             
             }else{
                 res.status(400).json({msg:'you cant upvote on your question'})
             }
@@ -129,26 +146,36 @@ class Controller{
 
     static downVoteQuestion(req,res){
         let voterId = req.user._id
-        console.log(voterId)
-        console.log("ini req user controller",req.user)
-        console.log(voterId)
         Question.findOne({
             _id: req.params.id
         })
         .then(data => {
             if(String(data.owner) !== String(req.user._id)){
-                Question.update({
-                    _id: req.params.id
-                },{
-                    $addToSet: {votersDownId : voterId},
-                    $pull: {votersUpId : voterId}
+                Question.findOne({
+                    _id:req.params.id,
+                    votersDownId: {$in:voterId}
                 })
-                .then(response => {
-                    console.log(response)
-                    res.status(200).json({msg: 'downvote success',response})
+                .then(checkVote => {
+                    if(checkVote){
+                        res.status(400).json({msg: 'you have voted this question'})
+                    }else{
+                        Question.update({
+                            _id: req.params.id
+                        },{
+                            $addToSet: {votersDownId : voterId},
+                            $pull: {votersUpId : voterId},
+                            $inc: {vote :-1}
+                        })
+                        .then(response => {
+                            res.status(200).json({msg: 'downvote success',response})
+                        })
+                        .catch(err => {
+                            res.status(400).json({msg: 'downvote failed',err})
+                        })
+                    }
                 })
                 .catch(err => {
-                    res.status(400).json({msg: 'downvote failed',err})
+                    res.status(400).json(err)
                 })
             }else{
                 res.status(400).json({msg:'you cant downvote on your question'})

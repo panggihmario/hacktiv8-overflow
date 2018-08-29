@@ -21,9 +21,17 @@ export default new Vuex.Store({
     errLogin: '',
     answer: '',
     dialogEditAnswer: false,
-    idAnswer: ''
+    idAnswer: '',
+    statusLogin: false,
+    userLogin: ''
   },
   mutations: {
+    setUserLogin (state, payload) {
+      state.userLogin = payload
+    },
+    setStatusLogin (state,payload) {
+      state.statusLogin = payload
+    },
     setDialogLogin (state, payload) {
       state.dialogLogin = payload
     },
@@ -106,12 +114,20 @@ export default new Vuex.Store({
       })
       .then(dataUser => {
         let token = dataUser.data.authorization
+        localStorage.setItem('name',dataUser.data.login.username)
         localStorage.setItem('token', token)
+        context.commit('setStatusLogin',true)
+        context.commit('setUserLogin',dataUser.data.login.username)
+        context.commit('setDialogLogin', false)
       })
       .catch(err => {
         this.state.errLogin = err.response.data.msg
         console.log(err.response)
       })
+    },
+    logout (context) {
+      localStorage.clear()
+      context.commit('setStatusLogin',false)
     },
     addQuestion (context) {
       let token = localStorage.getItem('token')
@@ -163,6 +179,8 @@ export default new Vuex.Store({
       })
       .then(response => {
         console.log(response)
+        context.commit('setDialogEdit',false)
+        context.dispatch('getOneQuestion',id)
       })
       .catch(err => {
         console.log(err.response)
@@ -176,6 +194,8 @@ export default new Vuex.Store({
         }
       })
       .then(response => {
+        router.push('/list')
+        context.dispatch('getAllQuestion')
         console.log(response)
       })
       .catch(err =>{
@@ -190,7 +210,8 @@ export default new Vuex.Store({
         }
       })
       .then(vote => {
-        context.dispatch(`getOneQuestion(${id})`)
+        context.dispatch(`getOneQuestion`,id)
+        router.push(`/${id}`)
         console.log(vote.data)
       })
       .catch(err => {
@@ -205,8 +226,8 @@ export default new Vuex.Store({
         }
       })
       .then(vote => {
-        context.dispatch(`getOneQuestion(${id})`)
-        console.log(vote.data)
+        context.dispatch(`getOneQuestion`,id)
+        router.push(`/${id}`)
       })
       .catch(err => {
         console.log(err.response)
@@ -214,7 +235,6 @@ export default new Vuex.Store({
     },
     addAnswer (context, id) {
       let token = localStorage.getItem('token')
-      
       axios.post(`http://localhost:3000/answer/add/${id}`,{
         answer: this.state.answer
       },{
@@ -224,7 +244,7 @@ export default new Vuex.Store({
       })
       .then(dataAnswer => {
         this.state.answer = ''
-        context.dispatch(`getOneQuestion(${id})`)
+        context.dispatch(`getOneQuestion`,id)
         router.push(`/${id}`)
         console.log(dataAnswer)
       })
@@ -243,9 +263,47 @@ export default new Vuex.Store({
         }
       })
       .then(dataEdit => {
+        this.state.answer = ''
+        context.dispatch(`getOneQuestion`,id)
+        context.commit('setDialogEditAnswer')
+        router.push(`/${id}`)
         console.log('success',dataEdit)
       })
       .catch(err =>{
+        console.log(err.response)
+      })
+    },
+    upVoteAnswer (context, data) {
+      let token = localStorage.getItem('token')
+      axios.put(`http://localhost:3000/answer/upvote/${data._id}`,{},{
+        headers: {
+          authorization: token
+        }
+      })
+      .then(vote => {
+        context.dispatch(`getOneQuestion`,data.question)
+        context.commit('setDialogEditAnswer')
+        router.push(`/${data.question}`)
+        console.log('success',vote)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    },
+    downVoteAnswer (context, data) {
+      let token = localStorage.getItem('token')
+      axios.put(`http://localhost:3000/answer/downvote/${data._id}`,{},{
+        headers: {
+          authorization: token
+        }
+      })
+      .then(vote => {
+        context.dispatch(`getOneQuestion`,data.question)
+        context.commit('setDialogEditAnswer')
+        router.push(`/${data.question}`)
+        console.log('succes',vote)
+      })
+      .catch(err => {
         console.log(err.response)
       })
     }

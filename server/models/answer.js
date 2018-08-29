@@ -21,7 +21,11 @@ var blogAnswer = new Schema({
     votersDownId: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    vote: {
+        type: Number,
+        default: 0
+    }
 },{
     timestamps: true
 })

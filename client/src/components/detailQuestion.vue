@@ -18,7 +18,7 @@
               <v-btn flat icon color="black" @click="upVoteQuestion(oneQuestion._id)">
                   <i class="fas fa-thumbs-up fa-2x"></i>
               </v-btn>
-                {{totalVote(oneQuestion)}}
+                {{oneQuestion.vote}}
                 <v-btn flat icon color="black" @click="downVoteQuestion(oneQuestion._id)">
                     <i class="fas fa-thumbs-down fa-2x"></i>
                 </v-btn>
@@ -42,11 +42,11 @@
             <v-btn flat color="orange" @click="openModalEditAnswer(answer)">Edit</v-btn>
             <v-btn flat color="orange">Delete</v-btn>
             <v-spacer></v-spacer>
-              <v-btn flat icon color="black" @click="upVoteQuestion(oneQuestion._id)">
+              <v-btn flat icon color="black" @click="upVoteAnswer(answer)">
                   <i class="fas fa-thumbs-up fa-2x"></i>
               </v-btn>
-                {{totalVote(oneQuestion)}}
-                <v-btn flat icon color="black" @click="downVoteQuestion(oneQuestion._id)">
+                {{answer.vote}}
+                <v-btn flat icon color="black" @click="downVoteAnswer(answer)">
                     <i class="fas fa-thumbs-down fa-2x"></i>
                 </v-btn>
           </v-card-actions>
@@ -77,7 +77,9 @@ export default {
         'upVoteQuestion', 
         'downVoteQuestion', 
         'addAnswer',
-        'openModalEditAnswer'
+        'openModalEditAnswer',
+        'upVoteAnswer',
+        'downVoteAnswer'
     ]),
     totalVote(val){
       let up = val.votersUpId.length
@@ -116,8 +118,10 @@ export default {
       }
     },
     mounted () {
-      this.getOneQuestion()
       this.getAllQuestion()
+      if(this.$route.params.id !== undefined){
+          this.getOneQuestion(this.$route.params.id)
+      }
     },
     watch: {
       '$route' (to, from){
