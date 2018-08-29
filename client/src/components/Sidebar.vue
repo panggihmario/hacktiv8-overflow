@@ -20,7 +20,7 @@
         avatar
       >
         <v-list-tile-action>
-          <i class="fas fa-home"></i>
+          <i class="fas fa-plus-circle"></i>
         </v-list-tile-action>
         <v-list-tile-content>
         <router-link :to="{name: 'add'}"  class="black--text" style="text-decoration:none">  Add</router-link>

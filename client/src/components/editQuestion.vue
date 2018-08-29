@@ -1,7 +1,7 @@
 <template>
     <v-layout row justify-center>
   <v-dialog v-model="dialogEdit" fullscreen hide-overlay transition="dialog-bottom-transition">
-    <v-card>
+    <v-card class="white">
       <v-toolbar class="grey darken-3">
           <v-btn icon dark @click.native="dialogEdit = false">
             <v-icon>close</v-icon>
@@ -17,7 +17,7 @@
        <v-subheader>Edit Question</v-subheader>
       <v-list-tile >
         <v-flex xs8>
-          <v-text-field label="Title" outline v-model="inputTitle"></v-text-field>
+          <v-text-field label="Title"  v-model="inputTitle"></v-text-field>
         </v-flex>
       </v-list-tile>
       <v-list-tile >

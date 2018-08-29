@@ -19,6 +19,7 @@ mongoose.connect(`mongodb://mario:mario123@ds157901.mlab.com:57901/hacktiv8-over
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var questionRouter = require('./routes/question')
+var answerRouter = require('./routes/answer')
 
 var app = express();
 app.use(cors());
@@ -35,11 +36,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/question', questionRouter)
+app.use('/answer', answerRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {

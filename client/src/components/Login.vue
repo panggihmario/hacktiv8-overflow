@@ -1,8 +1,8 @@
 <template>
   <v-layout row justify-center>
   <v-dialog v-model="dialogLogin" fullscreen hide-overlay transition="dialog-bottom-transition">
-    <v-card>
-      <v-toolbar dark color="primary">
+    <v-card class="white">
+      <v-toolbar class="grey darken-3">
           <v-btn icon dark @click.native="dialogLogin = false">
             <v-icon>close</v-icon>
           </v-btn>
@@ -23,7 +23,6 @@
                       :rules="emailRules"
                       label="E-mail"
                       required
-                      outline
                     ></v-text-field>
                   </v-flex>
               </v-list-tile>
@@ -33,7 +32,6 @@
               <v-text-field
                 v-model ="inputPasswordLogin"
                 label="Password"
-                outline
                 :append-icon="show3 ? 'visibility_off' : 'visibility'"
                 :rules="[rules.required, rules.min]"
                 :type="show3 ? 'text' : 'password'"
@@ -42,9 +40,11 @@
                 class="input-group--focused"
                 @click:append="show3 = !show3"
               ></v-text-field>
+                 <div class="red--text">{{errLogin}}</div><br><br>
               </v-flex>
           </v-list-tile>
           <v-list-tile avatar>
+          
             <v-flex xs8 offset-xs2>
               <v-btn outline color="black" @click="login">Sign In</v-btn>
             </v-flex>
@@ -54,11 +54,9 @@
           <v-subheader>Sign Up</v-subheader>
             <v-list-tile avatar>
               <v-flex xs8 offset-xs2>
-                
                 <v-text-field
                   v-model="inputName"
                   label="Username"
-                  outline
                 ></v-text-field>
               </v-flex>
             </v-list-tile>
@@ -71,7 +69,6 @@
                 :rules="emailRules"
                 label="E-mail"
                 required
-                outline
               ></v-text-field>
                 </v-form>
               </v-flex>
@@ -82,7 +79,6 @@
                 <v-text-field
                   v-model ="inputPassword"
                   label="Password"
-                  outline
                   :append-icon="show3 ? 'visibility_off' : 'visibility'"
                   :rules="[rules.required, rules.min]"
                   :type="show3 ? 'text' : 'password'"
@@ -94,6 +90,7 @@
               </v-flex>
             </v-list-tile>
             <v-flex xs8 offset-xs2>
+             
               <v-btn outline color="black" @click="register">Sign Up</v-btn>
             </v-flex>
       </v-flex>
@@ -130,7 +127,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'username', 'email', 'password'
+      'username', 'email', 'password', 'errLogin'
     ]),
     dialogLogin: {
       get () {
